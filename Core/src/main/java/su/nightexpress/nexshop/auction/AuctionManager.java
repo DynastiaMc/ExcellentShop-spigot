@@ -436,7 +436,7 @@ public class AuctionManager extends AbstractModule {
 
         ActiveListing listing = ActiveListing.create(player, typing, currency, price);
         this.listings.add(listing);
-        this.plugin.runTaskAsync(task -> this.database.addListing(listing));
+        this.plugin.runTaskAsync(() -> this.database.addListing(listing));
 
         AuctionLang.LISTING_ADD_SUCCESS_INFO.getMessage().send(player, replacer -> replacer
             .replace(Placeholders.GENERIC_TAX, currency.format(taxPay))
@@ -476,7 +476,7 @@ public class AuctionManager extends AbstractModule {
 
         this.listings.remove(listing);
         this.listings.addCompleted(completedListing);
-        this.plugin.runTaskAsync(task -> {
+        this.plugin.runTaskAsync(() -> {
             this.database.addCompletedListing(completedListing);
             this.database.deleteListing(listing);
         });
@@ -508,7 +508,7 @@ public class AuctionManager extends AbstractModule {
 
         Players.addItem(player, listing.getItemStack());
         this.listings.remove(listing);
-        this.plugin.runTaskAsync(task -> this.database.deleteListing(listing));
+        this.plugin.runTaskAsync(() -> this.database.deleteListing(listing));
 
         this.mainMenu.flush();
     }
@@ -526,7 +526,7 @@ public class AuctionManager extends AbstractModule {
             AuctionLang.LISTING_CLAIM_SUCCESS.getMessage().send(player, replacer -> replacer.replace(listing.replacePlaceholders()));
         }
 
-        this.plugin.runTaskAsync(task -> this.database.saveCompletedListings(listings));
+        this.plugin.runTaskAsync(() -> this.database.saveCompletedListings(listings));
     }
 
     public boolean canBeUsedHere(@NotNull Player player) {

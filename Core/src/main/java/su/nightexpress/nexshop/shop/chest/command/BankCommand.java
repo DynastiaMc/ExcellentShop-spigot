@@ -39,7 +39,7 @@ public class BankCommand {
             }
 
             UUID targetId = user.getId();
-            plugin.runTask(task -> module.openBank(player, targetId));
+            plugin.runTask(() -> module.openBank(player, targetId));
         });
         return true;
     }

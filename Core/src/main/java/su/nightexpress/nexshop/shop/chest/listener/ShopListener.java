@@ -1,5 +1,6 @@
 package su.nightexpress.nexshop.shop.chest.listener;
 
+import com.github.Anon8281.universalScheduler.foliaScheduler.FoliaScheduler;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -98,7 +99,7 @@ public class ShopListener extends AbstractListener<ShopPlugin> {
             EquipmentSlot slot = event.getHand();
             Block block = event.getBlockPlaced();
 
-            this.plugin.runTask(task -> {
+            this.plugin.runTask(() -> {
                 if (this.module.createShopFromItem(player, block, itemStack)) {
                     player.getInventory().setItem(slot, itemStack);
                 }
@@ -135,7 +136,7 @@ public class ShopListener extends AbstractListener<ShopPlugin> {
                     return;
                 }
 
-                this.plugin.runTask(task -> {
+                this.plugin.runTask(() -> {
                     this.module.getShopMap().updatePositionCache(shop);
                 });
                 return;
@@ -156,7 +157,8 @@ public class ShopListener extends AbstractListener<ShopPlugin> {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onShopExpansion(BlockPlaceEvent event) {
         Block block = event.getBlockPlaced();
-        this.plugin.runTask(task -> {
+
+        new FoliaScheduler(plugin).runTask(block.getLocation(), () -> {
             if (!(block.getState() instanceof Chest chest)) return;
             if (!(chest.getInventory() instanceof DoubleChestInventory inventory)) return;
 

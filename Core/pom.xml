@@ -43,6 +43,11 @@
             <url>https://repo.codemc.io/repository/maven-releases/</url>
         </repository>
 
+        <repository>
+            <id>alex9849</id>
+            <url>https://nexus.alex9849.net/repository/maven-releases/</url>
+        </repository>
+
 <!--        Broken-->
 <!--        <repository>-->
 <!--            <id>reposilite-repository-releases</id>-->
@@ -70,7 +75,8 @@
             <groupId>com.griefdefender</groupId>
             <artifactId>api</artifactId>
             <version>2.1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/api-2.1.0-SNAPSHOT.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -81,10 +87,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.alex9849.arm</groupId>
-            <artifactId>AdvancedRegionMarket</artifactId>
+            <groupId>net.alex9849.advancedregionmarket</groupId>
+            <artifactId>advancedregionmarket</artifactId>
             <version>3.5.3</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -111,7 +116,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>5.3.0-SNAPSHOT</version>
+            <version>5.3.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -128,6 +133,14 @@
             <version>1.16.8.1.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.Anon8281</groupId>
+            <artifactId>UniversalScheduler</artifactId>
+            <version>0.1.6</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

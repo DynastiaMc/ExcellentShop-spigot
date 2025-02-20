@@ -1,9 +1,7 @@
 package su.nightexpress.nexshop.shop.chest;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.World;
+import com.github.Anon8281.universalScheduler.foliaScheduler.FoliaScheduler;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
@@ -134,9 +132,9 @@ public class ChestShopModule extends AbstractModule implements ShopModule {
         this.searchMenu = new ShopSearchMenu(this.plugin, this);
         this.shopView = new ShopView(this.plugin, this);
 
-        this.plugin.runTaskAsync(task -> {
+        this.plugin.runTaskAsync(() -> {
             this.loadBanks();
-            this.plugin.runTask(task2 -> this.loadShops());
+            this.plugin.runTask(this::loadShops);
         });
     }
 
@@ -250,7 +248,7 @@ public class ChestShopModule extends AbstractModule implements ShopModule {
         if (this.displayHandler != null) {
             this.displayHandler.setup();
 
-            this.addTask(this.plugin.createAsyncTask(() -> this.displayHandler.update()).setSecondsInterval(ChestConfig.DISPLAY_UPDATE_INTERVAL.get()));
+            this.addAsyncTask(() -> this.displayHandler.update(), ChestConfig.DISPLAY_UPDATE_INTERVAL.get());
         }
     }
 
@@ -297,13 +295,25 @@ public class ChestShopModule extends AbstractModule implements ShopModule {
         }
         // ----- OLD BANK UPDATE - END -----
 
-        shop.updatePosition();
-        // Prob not needed anymore since all data is stored in central data manager
+        World shopWorld = this.plugin.getServer().getWorld(shop.getWorldName());
+
+        if (shopWorld == null)
+            shop.deactivate();
+        else
+        {
+            Location shopLocation = shop.getBlockPos().toLocation(shopWorld);
+
+            new FoliaScheduler(plugin).runTask(shopLocation, () -> {
+                shop.updatePosition();
+                // Prob not needed anymore since all data is stored in central data manager
 //        if (this.plugin.getShopManager().getProductDataManager().isLoaded()) {
 //            shop.getPricer().updatePrices(); // Need to load price data from ProductDataManager on /cshop reload.
 //        }
 
-        this.shopMap.put(shop);
+                this.shopMap.put(shop);
+            });
+        }
+
         return true;
     }
 
@@ -339,7 +349,7 @@ public class ChestShopModule extends AbstractModule implements ShopModule {
         ChestBank bank = this.getBankMap().get(uuid);
         if (bank == null) {
             ChestBank bank2 = new ChestBank(uuid, new HashMap<>());
-            this.plugin.runTaskAsync(task -> this.plugin.getDataHandler().createChestBank(bank2));
+            this.plugin.runTaskAsync(() -> this.plugin.getDataHandler().createChestBank(bank2));
             this.getBankMap().put(uuid, bank2);
             return bank2;
         }
@@ -354,7 +364,7 @@ public class ChestShopModule extends AbstractModule implements ShopModule {
     }
 
     public void savePlayerBank(@NotNull ChestBank bank) {
-        this.plugin.runTaskAsync(task -> this.plugin.getDataHandler().saveChestBank(bank));
+        this.plugin.runTaskAsync(() -> this.plugin.getDataHandler().saveChestBank(bank));
     }
 
     @NotNull

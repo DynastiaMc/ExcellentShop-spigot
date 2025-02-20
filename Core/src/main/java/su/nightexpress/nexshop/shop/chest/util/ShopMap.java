@@ -9,20 +9,22 @@ import su.nightexpress.nexshop.shop.chest.impl.ChestShop;
 import su.nightexpress.nightcore.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public class ShopMap {
 
-    private final Map<String, ChestShop>                byId;
-    private final Map<String, Map<BlockPos, ChestShop>> byPosition;
-    private final Map<UUID, Set<ChestShop>>             byHolder;
-    private final Map<String, Set<ChestShop>>           byName;
+    private final ConcurrentMap<String, ChestShop> byId;
+    private final ConcurrentMap<String, Map<BlockPos, ChestShop>> byPosition;
+    private final ConcurrentMap<UUID, Set<ChestShop>>             byHolder;
+    private final ConcurrentMap<String, Set<ChestShop>>           byName;
 
     public ShopMap() {
-        this.byId = new HashMap<>();
-        this.byPosition = new HashMap<>();
-        this.byHolder = new HashMap<>();
-        this.byName = new HashMap<>();
+        this.byId = new ConcurrentHashMap<>();
+        this.byPosition = new ConcurrentHashMap<>();
+        this.byHolder = new ConcurrentHashMap<>();
+        this.byName = new ConcurrentHashMap<>();
     }
 
     public void clear() {
